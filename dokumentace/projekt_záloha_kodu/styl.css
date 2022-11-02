@@ -1,0 +1,129 @@
+body {
+	background-color: #81BECE;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+
+header {
+	background-color: #036280;
+	border-radius: 10px;
+	margin-top: 5px;
+	min-height: 150px;
+	color: #d3e0f5;
+}
+header p {
+	padding-left: 20px;
+}
+header h1 {
+	padding: 20px;
+	font-family: "Foobar Pro", "sans-serif";
+	color: #ebf1fa;
+	/*float: left;*/
+}
+
+img {
+	padding: 10px;
+	max-height: 140px;
+	float: right;
+}
+
+footer{
+ background-color: #378BA4;
+ width: 100%;
+ border-radius: 10px;
+ margin: 5px 0 5px 0;
+ text-align: center;
+}
+
+h3 {
+	margin-top: 10px;
+}
+h5 {
+	margin-top: 10px;
+}
+ /* Place the navbar at the bottom of the page, and make it stick */
+.navbar {
+	overflow: hidden;
+	width: 100%;
+	background-color: #378BA4;
+	border-radius: 10px;
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 0;
+	margin: 5px 0 5px 0;
+	padding: 0 5px;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+  display: block;
+  text-decoration: none;
+  padding: 10px;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+  background-color: #6dabbf;
+  color: black;
+}
+
+/* Add a green background color to the active link */
+.navbar a.active {
+  background-color: #5aacc4;
+  color: white;
+}
+
+/* Hide the link that should open and close the navbar on small screens */
+.navbar .icon {
+  display: none;
+} 
+
+/*-------------------*/
+
+.all {
+	min-height: 900px;
+	/*background-color: #036280;*/
+	border-radius: 10px;
+}
+
+.content {
+	width: 70%;
+	background-color: #ebf1fa;
+	border-radius: 10px;
+	/*float: left;*/
+	height: 100%;
+	min-height: 900px;
+	padding: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.all-side {
+	width: 30%;
+	/*background-color: #036280;*/
+	border-radius: 10px;
+	float: right;
+	min-height: 900px;
+}
+
+.side1 {
+	height: 100%;
+	background-color: #d3e0f5;
+	border-radius: 10px;
+	margin-left: 5px;
+	padding-bottom: 10px;
+}
+
+.side2 {
+	height: 100%;
+	background-color: #d3e0f5;
+	border-radius: 10px;
+	margin-left: 5px;
+	margin-top	: 10px;
+	padding: 5px;
+}
