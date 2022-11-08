@@ -1,0 +1,32 @@
+.btn-send {
+	background-color: #81BECE;
+}
+
+.content-log {
+	width: 70%;
+	background-color: #ebf1fa;
+	border-radius: 10px;
+	/*float: left;*/
+	height: 100%;
+	padding: 5px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	min-height: 450px;
+}
+
+.all-side-log {
+	width: 30%;
+	/*background-color: #036280;*/
+	border-radius: 10px;
+	float: right;
+}
+
+.all-log {
+	/*background-color: #036280;*/
+	border-radius: 10px;
+	min-height: 450px;
+}
+
+a {
+	text-decoration: none;
+}
