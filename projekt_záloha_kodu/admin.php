@@ -53,7 +53,7 @@ $('#myModal').on('shown.bs.modal', function () {
 
 <body class="container-fluid">
     <header>
-        <a href="index.html"><img src="logo.png" alt="logo" /></a>
+        <a href="index.php"><img src="logo.png" alt="logo" /></a>
         <center><h1>Administrátor</h1></center>
         <p><i>Tato aplikace je výsledkem školního projektu v kurzu Řízení SW projektů na Vysoké škole
     polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu!</i></p>
@@ -63,7 +63,7 @@ $('#myModal').on('shown.bs.modal', function () {
            <button><a onclick="showSprava()"> Správa článků</a></button>
            <button> <a onclick="showOdebratRoli()"> Změnit roli</a></button>
             <button><a onclick="showSmazatUser()"> Smazat uživatele</a></button>
-            <button><a href="index.html">Zpět</a></button>
+            <button><a href="index.php">Zpět</a></button>
     </menu>
     
     <div class="all" >

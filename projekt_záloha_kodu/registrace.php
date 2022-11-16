@@ -12,7 +12,7 @@
 
 <body class="container-fluid">
 <header>
-	<a href="index.html"><img src="logo.png" alt="logo" /></a>
+	<a href="index.php"><img src="logo.png" alt="logo" /></a>
 	<h1>Node Chronicles - registrace</h1>
 	<p><i>Tato aplikace je výsledkem školního projektu v kurzu Řízení SW projektů na Vysoké škole
 polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu!</i></p>
@@ -20,15 +20,7 @@ polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu
 </header>
 
 
-<menu class="navbar">
-	<a href="index.html">Domů</a>
-	<a href="">Archiv</a>
-	<a href="">Vyhledat článek</a>
-	<a href="">Položka</a>
-	<a href="">Položka</a>
-	<a href="">Položka</a>
-	<a href="prihlaseni.html">Přihlásit se</a>
-</menu>
+<?php include('tools/sidebar.php'); ?>
 
 <div class="all-log">
 <div class="all-side-log">
