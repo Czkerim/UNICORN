@@ -6,7 +6,7 @@ require_once "connect.php";
 // Start the session
 session_start();
 
-// if the user is already logged in then redirect user to welcome page
+
 if (isset($_SESSION["userid"]) && $_SESSION["userid"] === true) {
     header("location: index.php");
     exit;
@@ -38,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             if ($row) {
                 if (password_verify($password, $row['heslo'])) {
                     $_SESSION["userid"] = $row['ID_uzivatel'];
+                    $_SESSION["role"] = $row['ID_role'];
                     $_SESSION["user"] = $row;
 
                     // Redirect the user to welcome page
