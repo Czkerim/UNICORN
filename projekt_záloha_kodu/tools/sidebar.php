@@ -8,8 +8,12 @@ echo '<menu class="navbar">
 	<a href="">Položka</a>
 	<a href="">Položka</a>
 	<a href="">Položka</a>
-	<a href="prihlaseni.php">Přihlásit se</a>
-	<a href="admin.php">Administrace</a>
-</menu>';
+	<a href="prihlaseni.php">Přihlásit se</a>';
+
+ if ($_SESSION["role"]==admin ) 
+{	echo '<a href="admin.php">Administrace</a>';
+}
+
+echo '</menu>';
 
 ?>

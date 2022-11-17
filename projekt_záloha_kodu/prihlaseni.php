@@ -1,88 +1,61 @@
 <?php
 
-if(!isset($_SESSION)) {session_start();}
 
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    $_SESSION['Username'] = $user['username'];
+require_once "connect.php";
+
+// Start the session
+session_start();
+
+// if the user is already logged in then redirect user to welcome page
+if (isset($_SESSION["userid"]) && $_SESSION["userid"] === true) {
     header("location: index.php");
     exit;
 }
 
 
-$username = $password = "";
-$username_err = $password_err = $login_err = "";
+$error = '';
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-    // Check if username is empty
-    if(empty(trim($_POST["username"]))){
-        $username_err = "Prosím zadej uživatelské jméno.";
-    } else{
-        $username = trim($_POST["username"]);
+    // validate if email is empty
+    if (empty($email)) {
+        $error .= '<p class="error">Prosím zadej emailovou adresu.</p>';
     }
 
-    // Check if password is empty
-    if(empty(trim($_POST["password"]))){
-        $password_err = "Prosím vlož heslo.";
-    } else{
-        $password = trim($_POST["password"]);
+    // validate if password is empty
+    if (empty($password)) {
+        $error .= '<p class="error">Prosím vlož heslo.</p>';
     }
 
-    // Validate credentials
-    if(empty($username_err) && empty($password_err)){
-        // Prepare a select statement
-        $sql = "SELECT id, username, password FROM unicorn_uzivatel username = ?";
+    if (empty($error)) {
+        if($query = $spojeni->prepare("SELECT * FROM unicorn_uzivatel WHERE email = ?")) {
+            $query->bind_param('s', $email);
+            $query->execute();
+            $row = $query->fetch();
+            if ($row) {
+                if (password_verify($password, $row['heslo'])) {
+                    $_SESSION["userid"] = $row['ID_uzivatel'];
+                    $_SESSION["user"] = $row;
 
-        if($stmt = mysqli_prepare($spojeni, $sql)){
-
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-
-
-            $param_username = $username;
-
-
-            if(mysqli_stmt_execute($stmt)){
-
-                mysqli_stmt_store_result($stmt);
-
-                // Check if username exists, if yes then verify password
-                if(mysqli_stmt_num_rows($stmt) == 1){
-                    // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if(mysqli_stmt_fetch($stmt)){
-                        if(password_verify($password, $hashed_password)){
-                            // Password is correct, so start a new session
-                            session_start();
-
-                            // Store data in session variables
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;
-
-                            // Redirect user to welcome page
-                            header("location: index.php");
-                        } else{
-                            // Password is not valid, display a generic error message
-                            $login_err = "Špatné uživatelske jméno nebo heslo.";
-                        }
-                    }
-                } else{
-                    // Username doesn't exist, display a generic error message
-                    $login_err = "Špatné uživatelske jméno nebo heslo.";
+                    // Redirect the user to welcome page
+                    header("location: index.php");
+                    exit;
+                } else {
+                    $error .= '<p class="error">Heslo není správné.</p>';
                 }
-            } else{
-                echo "Oops! Něco se nepovedlo. Zkus to znovu později";
+            } else {
+                $error .= '<p class="error">Nebyl nalezen žádný uživatel s tímto emailem</p>';
             }
-
-            // Close statement
-            mysqli_stmt_close($stmt);
         }
+        $query->close();
     }
-
     // Close connection
     mysqli_close($spojeni);
 }
+
 
 
 
@@ -137,23 +110,19 @@ polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu
 	<div class="content-log">
 		<div class="container-fluid">
 				<h3>Přihlásit se</h3>
-            <?php
-            if(!empty($login_err)){
-                echo '<div class="alert alert-danger">' . $login_err . '</div>';
-            }
-            ?>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
-                <div class="form-group" style="wi">
-                    <label for="username">Přezdívka</label>
-                    <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
-                    <span class="invalid-feedback"><?php echo $username_err; ?></span>
+            <?php echo '<div  style="color: red" >' .$error.'   </div>'; ?>
+
+            <form action="" method="POST">
+
+                <div class="form-group" >
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control" required />
 
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>">
-                    <span class="invalid-feedback"><?php echo $password_err; ?></span>
+                    <label>Heslo</label>
+                    <input type="password" name="password" class="form-control" required>
                 </div>
                 <br>
                 <div class="form-group">
@@ -161,7 +130,8 @@ polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu
                 </div>
 
                 <div class="form-group">
-                    <button style="width: 100%" type="submit" class="btn btn-send form-group" value="Login">Přihlásit se</button>
+                    <input style="width: 100%" type="submit" class="btn btn-send form-group" name="submit" class="btn btn-primary" value="submit">
+
                 </div>
 
 
