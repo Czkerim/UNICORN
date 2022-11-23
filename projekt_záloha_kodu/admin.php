@@ -1,3 +1,18 @@
+    <?php
+
+if(!isset($_SESSION))
+{
+    session_start();
+}
+
+if (!isset($_SESSION["loggedin"]) || $_SESSION["role"] !== 5) {
+    header("location: index.php");
+    exit;
+}
+
+?>
+
+
 <!doctype html>
 <html lang=cs>
 <head>
@@ -81,67 +96,89 @@ $('#myModal').on('shown.bs.modal', function () {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <th scope="row">1</th>
-                            <td>Syntaxe SQL</td>
-                            <td>Informatika</td>
-                            <td>Luděk Březina</td>
-                            <td>13-12-2015</td>
-                            <td>Pavel Svoboda, Petr Adam</td>
-                            <td class="tdRight" colspan="3"><button>Smazat</button>
-                            <button>Zveřejnit</button>
-                            <button>Skrýt</button></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>PHP pro objěktové programování</td>
-                            <td>Informatika</td>
-                            <td>Antonín Mezera</td>
-                            <td>16-05-2022</td>
-                            <td>Miloslav Dvorský, Martin Zeman</td>
-                            <td class="tdRight" colspan="3"><button>Smazat</button>
-                                <button>Zveřejnit</button>
-                                <button>Skrýt</button></td>
-                            
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Proč je ve vesmíru tma</td>
-                            <td>Vesmír</td>
-                            <td>Alexander Novák</td>
-                            <td>01-01-2021</td>
-                            <td>František Černý, Mikuláš Čert</td>
-                            <td class="tdRight" colspan="3"><button>Smazat</button>
-                                <button>Zveřejnit</button>
-                                <button>Skrýt</button></td>
-                          </tr>
+                          <?php
+
+require 'connect.php';
+                                // načtení dat z databáze a zobrazení
+                              $sql = "SELECT * FROM unicorn_clanek";
+                              $result = mysqli_query($spojeni, $sql);
+                              if (mysqli_num_rows($result) > 0) {
+                              while($row = mysqli_fetch_assoc($result)) {
+                                echo '<tr>';
+                             echo '<td>' . $row["ID_clanek"] . '</td>';
+                            echo '<td>' . $row["nazev"] . '</td>';
+                            echo '<td>' . $row["tema"] . '</td>';
+                              $sql2 = "SELECT jmeno, prijmeni FROM unicorn_uzivatel WHERE ID_uzivatel=".$row["ID_autor"];
+                              $result2 = mysqli_query($spojeni, $sql2);
+                              $row2 = mysqli_fetch_assoc($result2);
+                            echo '<td>' . $row2["jmeno"] . ' ' . $row2["prijmeni"] . '</td>';
+                            echo '<td>' . $row["datum_vydani"] . '</td>';                  
+                            $sql2 = "SELECT jmeno, prijmeni FROM unicorn_uzivatel WHERE ID_uzivatel=".$row["ID_recenzent"];
+                              $result2 = mysqli_query($spojeni, $sql2);
+                              $row2 = mysqli_fetch_assoc($result2);
+                            echo '<td>' . $row2["jmeno"] . ' ' . $row2["prijmeni"] . ', ';                         
+                            $sql2 = "SELECT jmeno, prijmeni FROM unicorn_uzivatel WHERE ID_uzivatel=".$row["ID_recenzent2"];
+                              $result2 = mysqli_query($spojeni, $sql2);
+                              $row2 = mysqli_fetch_assoc($result2);
+                            echo $row2["jmeno"] . ' ' . $row2["prijmeni"] . '</td>';
+                            echo '<td class="tdRight" colspan="3">';
+							
+							echo "<a class='tlac' href='admin.php?id=".$row['ID_clanek']."&del=1'><i class='fas fa-trash'></i> Smazat</a>";
+                            if ($row['Visible'] == 0)
+                            {
+                                echo "<a class='tlac' href='admin.php?id=".$row['ID_clanek']."&show=1'><i class='fas fa-trash'></i> Zveřejnit</a>";
+                            }
+                            else 
+                            {
+                            echo "<a class='tlac' href='admin.php?id=".$row['ID_clanek']."&hide=1'><i class='fas fa-trash'></i> Skrýt</a>";
+                            }
+							
+							echo '</td>';
+							echo '</tr>';
+							
+							}
+							  }
+						mysqli_close($spojeni);
+							?>
                         </tbody>
                       </table>
-                      <i>Tabulka se bude generovat pomocí dat z databáze</i>
+
 
             </div>	
     <div id="odebratRoli"  class="container-fluid">
 
 <center><div class="container change" >
-        <form class="form-inline" id="userform">
+        <form class="form-inline" id="userform" name="zmenroli" action="" method="POST">
 
             <span style="color:white" class="label label-default"><h4>Změnit roli uživatele</h4></span>
             <select class="form-select" id="users" name="userlist" form="userform">
-              <option value="id">1 | Pavel Novák | Redaktor</option>
-              <option value="id">2 | Ludvík Stánek | Autor</option>
-              <option value="id">3 | Martin Dloubal | Uživatel</option>
+              <?php 			
+			
+			require 'connect.php';			
+            
+            
+                               // načtení všech uživatelů v databázi včetně role
+                              $sql = "SELECT unicorn_uzivatel.ID_uzivatel, unicorn_uzivatel.jmeno, unicorn_uzivatel.prijmeni, unicorn_role.nazev_role FROM unicorn_uzivatel INNER JOIN unicorn_role ON unicorn_uzivatel.ID_role=unicorn_role.ID_role ";
+                              $result = mysqli_query($spojeni, $sql);
+                              if (mysqli_num_rows($result) > 0) {
+                              while($row = mysqli_fetch_assoc($result)) {								  
+								 echo '<option value="' . $row["ID_uzivatel"] . '">' . $row["ID_uzivatel"] . ' | ' . $row["jmeno"] . ' '. $row["prijmeni"] . ' | ' . $row["nazev_role"] . '</option>';							
+							}
+							  }
+						mysqli_close($spojeni);
+							?>
             </select>
 
 
             <select class="form-select" id="role" name="rolelist" form="userform">
-                <option value="autor">Autor</option>
-                <option value="recenzent">Recenzent</option>
-                <option value="uzivatel">Uživatel</option>
-                <option value="redaktor">Redaktor</option>
-                <option value="sefredaktor">Šéfredaktor</option>
+                <option value="1">Autor</option>
+                <option value="2">Recenzent</option>
+                <option value="3">Uživatel</option>
+                <option value="4">Redaktor</option>
+                <option value="5">Šéfredaktor</option>
               </select>
           
-         <button type="submit" class="btn btn-primary"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench-adjustable" viewBox="0 0 16 16">
+         <button type="submit" name="edit" class="btn btn-primary"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench-adjustable" viewBox="0 0 16 16">
             <path d="M16 4.5a4.492 4.492 0 0 1-1.703 3.526L13 5l2.959-1.11c.027.2.041.403.041.61Z"/>
             <path d="M11.5 9c.653 0 1.273-.139 1.833-.39L12 5.5 11 3l3.826-1.53A4.5 4.5 0 0 0 7.29 6.092l-6.116 5.096a2.583 2.583 0 1 0 3.638 3.638L9.908 8.71A4.49 4.49 0 0 0 11.5 9Zm-1.292-4.361-.596.893.809-.27a.25.25 0 0 1 .287.377l-.596.893.809-.27.158.475-1.5.5a.25.25 0 0 1-.287-.376l.596-.893-.809.27a.25.25 0 0 1-.287-.377l.596-.893-.809.27-.158-.475 1.5-.5a.25.25 0 0 1 .287.376ZM3 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
           </svg> Potvrdit</button>
@@ -158,16 +195,26 @@ $('#myModal').on('shown.bs.modal', function () {
           
 
         <center><div class="container change" >
-            <form class="form-inline" id="deleteform">
+            <form class="form-inline" id="deleteform" name="deleteuser" action="" method="POST" onsubmit="return confirm('Opravdu chcete smazat uživatele? Tuto akci nelze vzít zpět!');">
     
                 <span style="color:white" class="label label-default"><h4>Odstranit uživatele</h4></span>
                 <select class="form-select" id="users" name="userlist" form="deleteform">
-                  <option value="id">1 | Pavel Novák | Redaktor</option>
-                  <option value="id">2 | Ludvík Stánek | Autor</option>
-                  <option value="id">3 | Martin Dloubal | Uživatel</option>
+                  <?php 			
+			
+			require 'connect.php';	
+                                 // načtení všech uživatelů v databázi včetně role		
+                              $sql = "SELECT unicorn_uzivatel.ID_uzivatel, unicorn_uzivatel.jmeno, unicorn_uzivatel.prijmeni, unicorn_role.nazev_role FROM unicorn_uzivatel INNER JOIN unicorn_role ON unicorn_uzivatel.ID_role=unicorn_role.ID_role ";
+                              $result = mysqli_query($spojeni, $sql);
+                              if (mysqli_num_rows($result) > 0) {
+                              while($row = mysqli_fetch_assoc($result)) {								  
+								 echo '<option value="' . $row["ID_uzivatel"] . '">' . $row["ID_uzivatel"] . ' | ' . $row["jmeno"] . ' '. $row["prijmeni"] . ' | ' . $row["nazev_role"] . '</option>';							
+							}
+							  }
+						mysqli_close($spojeni);
+							?>
                 </select>
               
-             <button data-toggle="modal" data-target="#exampleModal" type="submit" class="delete btn btn-primary"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench-adjustable" viewBox="0 0 16 16">
+             <button data-toggle="modal" data-target="#exampleModal" type="submit" name="delete" class="delete btn btn-primary"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench-adjustable" viewBox="0 0 16 16">
                 <path d="M16 4.5a4.492 4.492 0 0 1-1.703 3.526L13 5l2.959-1.11c.027.2.041.403.041.61Z"/>
                 <path d="M11.5 9c.653 0 1.273-.139 1.833-.39L12 5.5 11 3l3.826-1.53A4.5 4.5 0 0 0 7.29 6.092l-6.116 5.096a2.583 2.583 0 1 0 3.638 3.638L9.908 8.71A4.49 4.49 0 0 0 11.5 9Zm-1.292-4.361-.596.893.809-.27a.25.25 0 0 1 .287.377l-.596.893.809-.27.158.475-1.5.5a.25.25 0 0 1-.287-.376l.596-.893-.809.27a.25.25 0 0 1-.287-.377l.596-.893-.809.27-.158-.475 1.5-.5a.25.25 0 0 1 .287.376ZM3 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
               </svg> Potvrdit</button>
@@ -195,3 +242,76 @@ $('#myModal').on('shown.bs.modal', function () {
     </body>
     </html>
 
+
+    <?php
+    
+    
+          	if(isset($_POST["edit"]))
+            {
+            
+                    require 'connect.php';	
+                            // změna role u vybraného uživatele		
+                              $sql = "UPDATE unicorn_uzivatel SET ID_role=". $_POST['rolelist']. " WHERE ID_uzivatel=" . $_POST['userlist'];
+                              mysqli_query($spojeni, $sql);						
+				
+						mysqli_close($spojeni); 
+                         echo '<meta http-equiv="refresh" content="0;url=admin.php?" /> ';                                  
+            
+            }
+            
+            if(isset($_POST["delete"]))
+            {
+            
+                    require 'connect.php';	
+                    
+                            // odstranění uživatele		
+                              $sql = "DELETE FROM unicorn_uzivatel WHERE ID_uzivatel=" . $_POST['userlist'];
+                              mysqli_query($spojeni, $sql);						
+				
+						mysqli_close($spojeni);
+                         echo '<meta http-equiv="refresh" content="0;url=admin.php?" /> ';                                       
+            
+            }
+            
+            if(isset($_GET["show"]))
+            {
+            
+                    require 'connect.php';	
+                            // zobrazení článku		
+                              $sql = "UPDATE unicorn_clanek SET Visible=1 WHERE ID_clanek=" . $_GET['id'];
+                              mysqli_query($spojeni, $sql);						
+				
+						mysqli_close($spojeni);
+                        echo '<meta http-equiv="refresh" content="0;url=admin.php" /> ';                         
+            
+            }
+            
+            if(isset($_GET["hide"]))
+            {
+            
+                    require 'connect.php';
+                             // skrytí článku			
+                              $sql = "UPDATE unicorn_clanek SET Visible=0 WHERE ID_clanek=" . $_GET['id'];
+                              mysqli_query($spojeni, $sql);						
+				
+						mysqli_close($spojeni);
+                        echo '<meta http-equiv="refresh" content="0;url=admin.php" /> ';                        
+            
+            }
+            
+            if(isset($_GET["del"]))
+            {
+            
+                    require 'connect.php';
+                                // smazání článku			
+                              $sql = "DELETE FROM unicorn_clanek WHERE ID_clanek=" . $_GET['id'];
+                              mysqli_query($spojeni, $sql);						
+				
+						mysqli_close($spojeni);
+                        echo '<meta http-equiv="refresh" content="0;url=admin.php" /> ';                                        
+            
+            }
+            
+               
+    
+    ?>
