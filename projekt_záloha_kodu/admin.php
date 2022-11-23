@@ -1,11 +1,9 @@
     <?php
 
-if(!isset($_SESSION))
-{
+    
     session_start();
-}
-
-if (!isset($_SESSION["loggedin"]) || $_SESSION["role"] !== 5) {
+                      
+if ($_SESSION["role"] != 5) {
     header("location: index.php");
     exit;
 }
