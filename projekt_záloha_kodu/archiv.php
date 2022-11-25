@@ -51,7 +51,7 @@ polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu
 			
    <div class="container-fluid">
    <h3 >Archiv</h3>
-<div class="float-start col-md-1 p-2">	
+<div class="float-start col-md-1,5 p-2">	
 <label >Řazení:</label>
 	<select onChange="window.location.href=this.value" class="form-control"  id="clanek" name="clanek"  >
 		<option value="#" disabled selected hidden>Nejnovější</option>
@@ -63,7 +63,7 @@ polytechnické Jihlava. Nejedná se o stránky skutečného odborného časopisu
 	</select>
 	
 	</div>	
-<div class="float-start col-md-1 p-2 ">
+<div class="float-start col-md-1,5 p-2 ">
 <label">Rok vydání:</label>	
 	<select onChange="window.location.href=this.value" class="form-control "  id="rok" name="rok">
 	<option disabled selected hidden>2022</option>
